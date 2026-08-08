@@ -45,3 +45,8 @@ GOAL = (720, SCREEN_HEIGHT - 270, 40, 40)
 MAX_EPISODE_STEPS = 500
 
 
+# Reward values
+REWARD_STEP = -0.01             # i wanna encourage efficiency
+REWARD_GOAL = 100.0
+REWARD_DEATH = -50.0
+REWARD_PROGRESS_SCALE = 0.1     # multiplier for reward based on x progress towards goal
