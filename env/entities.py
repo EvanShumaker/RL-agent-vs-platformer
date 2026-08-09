@@ -29,3 +29,22 @@ class Platform:
 
 
 class Player:
+    """This is what the player moves, it has its own physics and collision stuff"""
+
+    def __init__(self):
+        '''
+        i actually move the 'creation' logic to reset(), because its something I need to call
+        multiple times, while still keeping the data of all the trials. Remember, init gets 
+        called upon creation.
+        '''
+        self.reset()
+
+    def reset(self):
+        self.x = C.PLAYER_START_X
+        self.y = C.PLAYER_START_Y
+        self.vs = 0.0 #velocity
+        self.vy = 0.0
+        self.width = C.PLAYER_WIDTH
+        self.height = C.PLAYER_HEIGHT
+        self.on_ground = False #starts in the air
+        self.alive = True
