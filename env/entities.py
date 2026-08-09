@@ -48,3 +48,7 @@ class Player:
         self.height = C.PLAYER_HEIGHT
         self.on_ground = False #starts in the air
         self.alive = True
+
+    def apply_action(self, action):
+        """Translate an action into velocity"""
+        
