@@ -96,3 +96,23 @@ class Player:
                     self.vy = 0
                     self.on_ground = True
 
+
+    def check_pit_fall(self, pit_x_range):
+        """Player dies if it falls past the screen bottom within the pit's x range."""
+        x_min, x_max = pit_x_range
+        if(x_min <= self.x <= x_max):
+            in_pit_x = True
+        else:
+            in_pit_x = False
+        
+        if(self.y > C.SCREEN_HEIGHT):
+            fell_below_screen = True
+        
+        if (in_pit_x and fell_below_screen):
+            self.alive = False
+
+    def check_goal_reached(self, goal):
+        return rects_overlap(
+            self.x, self.y, self.width, self.height,
+            goal.x, goal.y, goal.width, goal.height
+        )
