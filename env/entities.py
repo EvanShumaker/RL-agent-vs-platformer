@@ -62,4 +62,15 @@ class Player:
             self.vy = C.JUMP_VELOCITY
             self.on_ground = False
 
-            
+    
+    def apply_physics(self):
+        """Apply gravity and update position based on current velocity."""
+        self.vy += C.GRAVITY
+        self.vy = min(self.vy, C.TERMINAL_VELOCITY)
+
+        self.x += self.vx
+        self.y += self.vy
+
+        # Keep player within horizontal screen bounds
+        self.x = max(0, min(self.x, C.SCREEN_WIDTH - self.width))
+
