@@ -116,3 +116,13 @@ class Player:
             self.x, self.y, self.width, self.height,
             goal.x, goal.y, goal.width, goal.height
         )
+
+
+class Goal:
+    """The target the player needs to reach to win the episode."""
+
+    def __init__(self, x, y, width, height):
+        self.x = x
+        self.y = y
+        self.width = width
+        self.height = height
