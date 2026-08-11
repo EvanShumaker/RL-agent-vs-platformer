@@ -74,3 +74,25 @@ class Player:
         # Keep player within horizontal screen bounds
         self.x = max(0, min(self.x, C.SCREEN_WIDTH - self.width))
 
+
+    def resolve_platform_collisions(self, platforms):
+        """
+        Check collision against all platforms and snap the player to the
+        top of any platform it's landing on. Right now it only resolves
+        vertical (landing) collisions, since that's what a platformer needs most.
+        """
+        self.on_ground = False
+
+        for platform in platforms:
+            if rects_overlap(self.x, self.y, self.width, self.height,
+                platform.x, platform.y, platform.width, platform.height):
+                # Only treat it as "landing" if the player was falling
+                # and is above the platform's top edge
+                falling = self.vy >= 0
+                was_above = (self.y + self.height - self.vy) <= platform.y + 1
+
+                if falling and was_above:
+                    self.y = platform.y - self.height
+                    self.vy = 0
+                    self.on_ground = True
+
