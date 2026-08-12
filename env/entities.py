@@ -119,7 +119,11 @@ class Player:
 
 
 class Goal:
-    """The target the player needs to reach to win the episode."""
+    """
+    The target the player needs to reach to win the episode.
+    x is the left edge. x+width is right edge
+    y is top edge. y+height is bottom edge
+    """
 
     def __init__(self, x, y, width, height):
         self.x = x
