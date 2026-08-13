@@ -37,11 +37,18 @@ class Game:
         I just need to call the code in the player class in entities to 
         apply action, apply physics, etc.
         """
+        if self.done:
+            raise RuntimeError("Step() called after episode ended. Call reset() again first")
 
         self.player.apply_action(action)
         self.player.apply_physics()
         # need to give Game platforms info so it can pass it here
         self.player.resolve_platform_collisions()
+        self.player.check_pit_fall(C.PIT_X_RANGE)
+
+        self.steps_elapsed += 1
+
+        return self._compute_reward(), self._check_done()
 
 
     def _compute_reward(self):
