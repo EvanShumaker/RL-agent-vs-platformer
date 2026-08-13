@@ -88,10 +88,12 @@ class Game:
     # not correct, fix later
     def _distance_to_goal():
         """
-        check the distance to the nearest edge. Theres 3 possibilities:
-        1. player center y val is within the y range of the goal, only need to measure x dist
-        2. player center x val is within goals x range
-        3. player center is outside of both ranges (diagonal)"""
+        check the distance to the nearest edge. Theres 8 cases:
+        Above, below, left, and right. Then the 4 diagonals.
+        Check left, mid, and right thirds with bools?
+        Then check top, middle, and bottom thirds.
+        Then do a bunch of if stmts comparing the bools
+        """
         #TODO: This measures against the top left point... i need additional cases for each side of the goal box
         xdist = self.goal.x - self.player.x
         ydist = self.goal.y - self.player.y
@@ -107,3 +109,14 @@ class Game:
         maybe useful later. use this to print out all the game information
         should i print? or return as a list or dict?
         """
+        return{
+            "player_x": self.player.x,
+            "player_y": self.player.y,
+            "player_vx": self.player.vx,
+            "player_vy": self.player.vy,
+            "on_ground": self.player.on_ground,
+            "alive": self.player.alive,
+            "steps_elapsed": self.player.steps_elapsed,
+            "platforms": [(p.x,p.y,p.width,p.height) for p in self.platforms],
+            "goal": (self.goal.x, self.goal.y, self.goal.width, self.goal.height),
+        }
