@@ -53,6 +53,16 @@ class Game:
         reward = C.REWARD_STEP
 
         dist = self._distance_to_goal()
+        progress = self._prev_dist_to_goal - dist
+        reward += progress * C.REWARD_PROGRESS_SCALE
+        self._prev_dist_to_goal = dist
+
+        if not self.player.alive:
+            reward += C.REWARD_DEATH
+        elif self.player.check_goal_reached(self.goal):
+            reward += C.REWARD_GOAL
+        
+        return reward
 
 
     def _check_done(self):
