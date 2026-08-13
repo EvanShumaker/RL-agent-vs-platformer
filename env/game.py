@@ -55,6 +55,27 @@ class Game:
         dist = self._distance_to_goal()
 
 
+    def _check_done(self):
+        """
+        basically all the cases in which the agent / player needs to reset
+        """
+        if not self.player.alive:
+            return True
+        if self.player.check_goal_reached(self.goal):
+            return True
+        if self.steps_elapsed >= C.MAX_EPISODE_STEPS:
+            return True
+        return False
+
+
+    # not correct, fix later
     def _distance_to_goal():
-        
+        """
+        check the distance to the nearest edge. Theres 3 possibilities:
+        1. player center y val is within the y range of the goal, only need to measure x dist
+        2. player center x val is within goals x range
+        3. player center is outside of both ranges (diagonal)"""
+        if(self.player.y > self.goal.y and self.player.y < self.goal.y+self.goal.height):
+            return self.goal.x - self.player.x
+        if(self.player.x < self.goal.x and self.player.y < self.goal.y+self.goal.height):
 
