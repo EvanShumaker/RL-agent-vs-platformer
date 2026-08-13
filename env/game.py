@@ -92,7 +92,18 @@ class Game:
         1. player center y val is within the y range of the goal, only need to measure x dist
         2. player center x val is within goals x range
         3. player center is outside of both ranges (diagonal)"""
+        #TODO: This measures against the top left point... i need additional cases for each side of the goal box
+        xdist = self.goal.x - self.player.x
+        ydist = self.goal.y - self.player.y
         if(self.player.y > self.goal.y and self.player.y < self.goal.y+self.goal.height):
-            return self.goal.x - self.player.x
+            return abs(xdist)
         if(self.player.x < self.goal.x and self.player.y < self.goal.y+self.goal.height):
+            return abs(ydist)
+        
 
+
+    def get_state(self):
+        """
+        maybe useful later. use this to print out all the game information
+        should i print? or return as a list or dict?
+        """
