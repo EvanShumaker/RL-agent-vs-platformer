@@ -4,6 +4,7 @@ This is the main game loop and logic.
 
 import env.constants as C
 from env.entities import Player, Platform, Goal
+from math import sqrt
 
 
 class Game:
@@ -86,7 +87,7 @@ class Game:
 
 
     # not correct, fix later
-    def _distance_to_goal():
+    def _distance_to_goal(self):
         """
         check the distance to the nearest edge. Theres 8 cases:
         Above, below, left, and right. Then the 4 diagonals.
@@ -94,14 +95,46 @@ class Game:
         Then check top, middle, and bottom thirds.
         Then do a bunch of if stmts comparing the bools
         """
-        #TODO: This measures against the top left point... i need additional cases for each side of the goal box
-        xdist = self.goal.x - self.player.x
-        ydist = self.goal.y - self.player.y
-        if(self.player.y > self.goal.y and self.player.y < self.goal.y+self.goal.height):
-            return abs(xdist)
-        if(self.player.x < self.goal.x and self.player.y < self.goal.y+self.goal.height):
-            return abs(ydist)
+        # short player position variables, based on the center. x and y are for top left corner of player
+        px = self.player.x + self.player.width / 2
+        py = self.player.y + self.player.height / 2
+        # top and bottom of the goal
+        topGY = self.goal.y
+        botGY = self.goal.y + self.goal.height
+        # left and right bounds of the goal
+        leftGX = self.goal.x
+        rightGX = self.goal.x + self.goal.width
+
+        if px < leftGX:
+            if py < topGY:
+                # up and left
+                return sqrt((px-leftGX)**2 + (py-topGY)**2)
+            if py > botGY:
+                # down and left
+                return sqrt((px-leftGX)**2 + (py-botGY)**2)
+            else:
+                # just left of goal bounds
+                return leftGX - px
         
+        if px > rightGX:
+            if py < topGY:
+                # up and right
+                return sqrt((px-rightGX)**2 + (py-topGY)**2)
+            if py > botGY:
+                # down and right
+                return sqrt((px-rightGX)**2 + (py-botGY)**2)
+            else:
+                # just right of goal bounds
+                return px - rightGX
+            
+        else:
+            # this means its right above, below, or inside the goal
+            if py < topGY:
+                return topGY - py
+            if py > botGY:
+                return py - botGY
+        
+        return 0
 
 
     def get_state(self):
