@@ -44,7 +44,7 @@ class Game:
         self.player.apply_action(action)
         self.player.apply_physics()
         # need to give Game platforms info so it can pass it here
-        self.player.resolve_platform_collisions()
+        self.player.resolve_platform_collisions(self.platforms)
         self.player.check_pit_fall(C.PIT_X_RANGE)
 
         self.steps_elapsed += 1
@@ -149,7 +149,7 @@ class Game:
             "player_vy": self.player.vy,
             "on_ground": self.player.on_ground,
             "alive": self.player.alive,
-            "steps_elapsed": self.player.steps_elapsed,
+            "steps_elapsed": self.steps_elapsed,
             "platforms": [(p.x,p.y,p.width,p.height) for p in self.platforms],
             "goal": (self.goal.x, self.goal.y, self.goal.width, self.goal.height),
         }

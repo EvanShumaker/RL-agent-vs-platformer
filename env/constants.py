@@ -9,7 +9,7 @@ SCREEN_HEIGHT = 450
 GRAVITY = 0.8
 JUMP_VELOCITY = -15
 MOVE_SPEED = 5
-TERMINAL VELOCITY = 20      # need max fall speed or physics get jankyy
+TERMINAL_VELOCITY = 20      # need max fall speed or physics get jankyy
 
 PLAYER_WIDTH = 30
 PLAYER_HEIGHT = 40
@@ -32,7 +32,7 @@ PLATFORMS = [
     (0, SCREEN_HEIGHT - 40, 300, 40),  # remember, down is positive.
     (400, SCREEN_HEIGHT - 40, 400, 40),     # This is the ground after the pit
     (300, SCREEN_HEIGHT - 150, 100, 20),
-    (550, SCREE_HEIGH - 230, 100, 20),
+    (550, SCREEN_HEIGHT - 230, 100, 20),
 ]
 
 # this is a hazard between 2 x values, basically saying the pit only exists there
