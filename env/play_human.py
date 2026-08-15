@@ -79,12 +79,15 @@ def main():
 
         if done: # messages for every possible ending scenario
             state = game.get_state()
-            if state["alive"] and game.player.check_goal_reached(game.goal):
+            if state["alive"] and state["goal_reached"]:
                 print(f"Reached the goal!! steps: {state['steps_elapsed']}")
             elif not state["alive"]:
                 print("Died. Resetting...")
             else:
                 print("Max steps reached. Resseting...")
+
+            # out of curiosity, i wanna see the reward
+            print(f"Reward:", reward)
             pygame.time.wait(500) # 500ms
             game.reset()
 

@@ -150,6 +150,7 @@ class Game:
             "player_vy": self.player.vy,
             "on_ground": self.player.on_ground,
             "alive": self.player.alive,
+            "goal_reached": self.player.check_goal_reached(self.goal), # useful in play_human
             "steps_elapsed": self.steps_elapsed,
             "platforms": [(p.x,p.y,p.width,p.height) for p in self.platforms],
             "goal": (self.goal.x, self.goal.y, self.goal.width, self.goal.height),
