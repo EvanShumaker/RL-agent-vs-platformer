@@ -141,6 +141,7 @@ class Game:
         """
         maybe useful later. use this to print out all the game information
         should i print? or return as a list or dict?
+        dict is better because i can actually use it as a multi helper function!
         """
         return{
             "player_x": self.player.x,
