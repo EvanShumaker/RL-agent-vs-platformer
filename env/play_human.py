@@ -60,5 +60,38 @@ def draw(screen, game):
 
 def main():
     pygame.init()
+    screen = pygame.display.set_mode((C.SCREEN_WIDTH, C.SCREEN_HEIGHT))
+    pygame.display.set_caption("Platformer RL agent, human play mode")
+    clock = pygame.time.Clock()
+
+    game = Game()
+    running = True
+
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        action = get_action_from_keys()
+        reward, done = game.step(action)
+
+        draw(screen, game)
+
+        if done: # messages for every possible ending scenario
+            state = game.get_state()
+            if state["alive"] and game.player.check_goal_reached(game.goal):
+                print(f"Reached the goal!! steps: {state['steps_elapsed']}")
+            elif not state["alive"]:
+                print("Died. Resetting...")
+            else:
+                print("Max steps reached. Resseting...")
+            pygame.time.wait(500) # 500ms
+            game.reset()
+
+        clock.tick(60) #60 fps
+
+    pygame.quit()
 
 
+if __name__ == "__main__":
+    main()
