@@ -1,6 +1,7 @@
 """
 this file lets humans play the game and do manual testing of levels.
-Uses pygame for rendering and keyboard input, not used by RL agent
+Uses pygame for rendering and keyboard input, not used by RL agent.
+To run: python -m env.play_human
 """
 
 import pygame
@@ -40,7 +41,7 @@ def draw(screen, game):
         pygame.draw.rect(screen, (100,100,110), (x,y,w,h))
 
     # this is the goal
-    pygame.draw.rect(screen, (240,200,60), *state["goal"])
+    pygame.draw.rect(screen, (240,200,60), state["goal"])
 
     # Draw pit (visual of this helps with testing)
     pxmin, pxmax = C.PIT_X_RANGE
