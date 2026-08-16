@@ -32,7 +32,7 @@ PLATFORMS = [
     (0, SCREEN_HEIGHT - 40, 300, 40),  # remember, down is positive.
     (400, SCREEN_HEIGHT - 40, 400, 40),     # This is the ground after the pit
     (300, SCREEN_HEIGHT - 150, 100, 20),
-    (550, SCREEN_HEIGHT - 230, 100, 20),
+    (500, SCREEN_HEIGHT - 230, 100, 20),
 ]
 
 # this is a hazard between 2 x values, basically saying the pit only exists there
