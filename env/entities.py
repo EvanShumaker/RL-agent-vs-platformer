@@ -107,9 +107,9 @@ class Player:
         
         if(self.y > C.SCREEN_HEIGHT):
             fell_below_screen = True
+            if (in_pit_x and fell_below_screen):
+                        self.alive = False
         
-        if (in_pit_x and fell_below_screen):
-            self.alive = False
 
     def check_goal_reached(self, goal):
         return rects_overlap(
