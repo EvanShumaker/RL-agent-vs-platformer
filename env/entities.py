@@ -50,15 +50,18 @@ class Player:
         self.alive = True
 
     def apply_action(self, action):
-        """Translate an action into velocity"""
-        if action == C.ACTION_LEFT:
+        """
+        Translate action into velocity
+        """
+        if action in (C.ACTION_LEFT, C.ACTION_LEFT_JUMP):
             self.vx = -C.MOVE_SPEED
-        elif action == C.ACTION_RIGHT:
+        elif action in (C.ACTION_RIGHT, C.ACTION_RIGHT_JUMP):
             self.vx = C.MOVE_SPEED
         else:
             self.vx = 0.0
 
-        if action == C.ACTION_JUMP and self.on_ground:
+        wants_jump = action in (C.ACTION_JUMP, C.ACTION_LEFT_JUMP, C.ACTION_RIGHT_JUMP)
+        if wants_jump and self.on_ground:
             self.vy = C.JUMP_VELOCITY
             self.on_ground = False
 

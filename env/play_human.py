@@ -10,19 +10,22 @@ from env.game import Game
 
 
 def get_action_from_keys():
-    """
-    Check what keys are being pressed and return that action
-    """
+    """translate key pressed into action"""
     keys = pygame.key.get_pressed()
+    jump = keys[pygame.K_SPACE] or keys[pygame.K_w] or keys[pygame.K_UP]
+    left = keys[pygame.K_LEFT] or keys[pygame.K_a]
+    right = keys[pygame.K_RIGHT] or keys[pygame.K_d]
 
-    # supporting wsad and arrows
-    if keys[pygame.K_SPACE] or keys[pygame.K_w] or keys[pygame.K_UP]:
+    if left and jump:
+        return C.ACTION_LEFT_JUMP
+    if right and jump:
+        return C.ACTION_RIGHT_JUMP
+    if jump:
         return C.ACTION_JUMP
-    if keys[pygame.K_LEFT] or keys[pygame.K_a]:
+    if left:
         return C.ACTION_LEFT
-    if keys[pygame.K_RIGHT] or keys[pygame.K_d]:
+    if right:
         return C.ACTION_RIGHT
-
     return C.ACTION_NOOP
 
 
