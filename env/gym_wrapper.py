@@ -59,7 +59,7 @@ class PlatformerEnv:
 
         # for goal distance, ill normalize against the max diagonal of the screen, just in case...
         max_dist = sqrt((C.SCREEN_HEIGHT)**2 + (C.SCREEN_WIDTH)**2)
-        norm_dist_to_goal = self.game._distance_to_goal() / max_dist
+        norm_dist_to_goal = state["distance_to_goal"] / max_dist
 
         return np.array([
             norm_x,

@@ -154,4 +154,5 @@ class Game:
             "steps_elapsed": self.steps_elapsed,
             "platforms": [(p.x,p.y,p.width,p.height) for p in self.platforms],
             "goal": (self.goal.x, self.goal.y, self.goal.width, self.goal.height),
+            "distance_to_goal": self._distance_to_goal(),
         }
