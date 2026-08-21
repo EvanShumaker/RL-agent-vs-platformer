@@ -31,14 +31,14 @@ class QNetwork(nn.Module):
 
     def forward(self, x):
         """
-        Passes the observation x thru the network
+        Passes the observation x thru the network.
         """
         return self.net(x)
 
 
 class DQNAgent:
     def __init__():
-        """Setup target network here"""
+        """Setup target network here."""
 
 
     def get_epsilon(self):
@@ -67,6 +67,7 @@ class DQNAgent:
 
 
     def save(self):
-
+        """Save state"""
 
     def load(self):
+        """Load state"""
