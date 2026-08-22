@@ -26,7 +26,13 @@ class QNetwork(nn.Module):
 
     def __init__(self, obs_size, num_acitons):
         super().__init__()
-        self.net = nn.Sequential() # add parameters to this
+        self.net = nn.Sequential(
+            nn.Linear(obs_size, 128),
+            nn.ReLU(),
+            nn.Linear(128,128),
+            nn.ReLU(),
+            nn.Linear(128,num_acitons),
+        ) # add parameters to this
 
 
     def forward(self, x):
