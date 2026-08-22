@@ -77,13 +77,25 @@ class DQNAgent:
 
     def get_epsilon(self):
         """Linear decay epsilon from start to end"""
+        fraction = min(1.0, self.steps_done / self.epsilon_decay_steps)
+        return self.epsilon_start + fraction * (self.epsilon_end - self.epsilon_start)
 
 
-    def select_action(self, observation):
+    def select_action(self, observation, training=True):
         """
         This is epsilon greedy: With probability epsilon, pick random action (observation)
         Otherwise, pick action with highest predicted Q val (exploitation)
         """
+        if training:
+            epsilon = self.get_epsilon()
+            self.steps_done += 1
+            if (random.random() < epsilon):
+                return random.randrange(self.num_actions)
+
+        with torch.no_grad():
+            obs_tensor = torch.from_numpy(observation).unsqueeze(0) #to add batch dimension
+            q_values = self.q_network(obs_tensor)
+            return q_values.argmax(dim=1).item()
 
 
     def train_step(self, replay_buffer, batch_size):
