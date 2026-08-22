@@ -108,12 +108,17 @@ class DQNAgent:
 
     def update_target_network(self):
         """
-        Copy main networks weights into target network
+        Copy main networks weights into target network.
+        doesnt return
         """
+        self.target_network.load_state_dict(self.q_network.state_dict())
 
 
-    def save(self):
+    def save(self, path):
         """Save state"""
+        torch.save(self.q_network.state_dict(), path)
 
-    def load(self):
+    def load(self, path):
         """Load state"""
+        self.q_network.load_state_dict(torch.load(path))
+        self.target_network.load_state_dict(self.q_network.state_dict())
