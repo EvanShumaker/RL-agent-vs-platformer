@@ -43,8 +43,36 @@ class QNetwork(nn.Module):
 
 
 class DQNAgent:
-    def __init__():
+    def __init__(
+            self,
+            obs_size=PlatformerEnv.OBS_SIZE,
+            num_actions=C.NUM_ACTIONS,
+            lr=1e-3,
+            gamma=0.99,
+            epsilon_start=1.0,
+            epsilon_end=0.05,
+            epsilon_decay_steps=50_000,
+    ):
         """Setup target network here."""
+        self.num_actions = num_actions
+        self.gamma = gamma # how much future reward matters compared to immediate
+
+        #main network. Train this and use it to pick actions
+        self.q_network = QNetwork(obs_size, num_actions)
+
+        #Target network. An occasionally updated copy used to compute good training targets
+        #Starts as exact copy of qnetwork
+        self.target_network = QNetwork(obs_size, num_actions)
+        self.target_network.load_state_dict(self.q_network.state_dict())
+        self.target_network.eval() # never trained directly. only copied into
+
+        self.optimizer = optim.Adam(self.q_network.parameters(), lr=lr)
+
+        # epsilon greedy exploration schedule
+        self.epsilon_start = epsilon_start
+        self.epsilon_end = epsilon_end
+        self.epsilon_decay_steps = epsilon_decay_steps
+        self.steps_done = 0
 
 
     def get_epsilon(self):
