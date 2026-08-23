@@ -104,6 +104,35 @@ class DQNAgent:
         Returns loss value for logging, and None if buffer doesnt have 
         enough experience
         """
+        if len(replay_buffer) < batch_size:
+            return None
+
+        states, actions, rewards, next_states, dones = replay_buffer.sample(batch_size)
+
+        states = torch.from_numpy(states)
+        actions = torch.from_numpy(actions)
+        rewards = torch.from_numpy(rewards)
+        next_states = torch.from_numpy(next_states)
+        dones = torch.from_numpy(dones)
+
+        # current qvals for actions taken
+        q_values = self.q_network(states)
+        q_values_taken = q_values.gather(1, actions.unsqueeze(1)).squeeze(1)
+
+        #target q vals: reward + discounted best future val (based on target network)
+        with torch.no_grad():
+            next_q_values = self.target_network(next_states)
+            max_next_q = next_q_values.max(dim=1)[0]
+            # If done there is no future. zero out the future term
+            targets = rewards + self.gamma * max_next_q * (1 - dones)
+
+        loss = nn.functional.smooth_l1_loss(q_values_taken, targets)
+
+        self.optimizer.zero_grad()
+        loss.backward()
+        self.optimizer.step()
+
+        return loss.item()
 
 
     def update_target_network(self):
