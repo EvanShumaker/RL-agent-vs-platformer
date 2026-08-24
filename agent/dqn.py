@@ -138,7 +138,7 @@ class DQNAgent:
     def update_target_network(self):
         """
         Copy main networks weights into target network.
-        doesnt return
+        doesnt return anything
         """
         self.target_network.load_state_dict(self.q_network.state_dict())
 
