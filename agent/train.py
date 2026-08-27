@@ -70,3 +70,11 @@ def train():
 
             log_writer.writerow([episode, total_reward, steps, current_epsilon, avg_loss])
             log_file.flush()  # write to disk immediately. logs are readable mid training
+
+            print(
+                f"Episode {episode}/{NUM_EPISODES} | "
+                f"Reward: {total_reward:.2f} | "
+                f"Steps: {steps} | "
+                f"Epsilon: {current_epsilon:.3f} | "
+                f"Avg Loss: {avg_loss:.4f}"
+            )
