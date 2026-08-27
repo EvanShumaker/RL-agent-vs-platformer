@@ -40,4 +40,33 @@ def train():
         log_writer.writerow(["episode","total_reward","steps","episode","avg_loss"])
 
         # cant do 0, NUM_EPS
-        for episode in range(1, NUM_EPISODES+1)
+        for episode in range(1, NUM_EPISODES+1):
+            observation = env.reset()
+            total_reward = 0.0
+            steps = 0
+            losses = []
+            done = False
+
+            while not done:
+                action = agent.select_action(observation, training=True)
+                next_observation, reward, done, info = env.step(action)
+
+                replay_buffer.push(observation, action, reward, next_observation, done)
+
+                observation = next_observation
+                total_reward += reward
+                steps += 1
+
+                if len(replay_buffer) >= MIN_BUFFER_SIZE_TO_TRAIN:
+                    loss = agent.train_step(replay_buffer, BATCH_SIZE)
+                    if loss is not None:
+                        losses.append(loss)
+
+            if episode % TARGET_UPDATE_FREQUENCY == 0:
+                agent.update_target_network()
+
+            avg_loss = np.mean(losses) if losses else 0.0
+            current_epsilon = agent.get_epsilon()
+
+            log_writer.writerow([episode, total_reward, steps, current_epsilon, avg_loss])
+            log_file.flush()  # write to disk immediately. logs are readable mid training
