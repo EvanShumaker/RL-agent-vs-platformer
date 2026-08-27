@@ -78,3 +78,8 @@ def train():
                 f"Epsilon: {current_epsilon:.3f} | "
                 f"Avg Loss: {avg_loss:.4f}"
             )
+
+            if episode % CHECKPOINT_FREQUENCY == 0:
+                checkpoint_path = os.path.join(CHECKPOINT_DIR, f"checkpoint_ep{episode}.pt")
+                agent.save(checkpoint_path)
+                print(f"  Saved checkpoint: {checkpoint_path}")
