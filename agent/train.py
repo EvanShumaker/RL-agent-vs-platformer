@@ -83,3 +83,12 @@ def train():
                 checkpoint_path = os.path.join(CHECKPOINT_DIR, f"checkpoint_ep{episode}.pt")
                 agent.save(checkpoint_path)
                 print(f"  Saved checkpoint: {checkpoint_path}")
+
+        # always save a final checkpoint at the end, regardless of frequency alignment
+        final_path = os.path.join(CHECKPOINT_DIR, "checkpoint_final.pt")
+        agent.save(final_path)
+        print(f"Training complete. Final checkpoint saved: {final_path}")
+
+
+    if __name__ == "__main__":
+        train()
