@@ -44,7 +44,7 @@ def train():
     #an exception thrown somewhere and .close() isnt ran, the file stays open
     with open(LOG_PATH, "w", newline="") as log_file:
         log_writer = csv.writer(log_file)
-        log_writer.writerow(["episode","total_reward","steps","episode","avg_loss"])
+        log_writer.writerow(["episode","total_reward","steps","epsilon","avg_loss"])
 
         # cant do 0, NUM_EPS
         for episode in range(1, NUM_EPISODES+1):
