@@ -42,7 +42,7 @@ class Player:
     def reset(self):
         self.x = C.PLAYER_START_X
         self.y = C.PLAYER_START_Y
-        self.vs = 0.0 #velocity
+        self.vx = 0.0 #velocity
         self.vy = 0.0
         self.width = C.PLAYER_WIDTH
         self.height = C.PLAYER_HEIGHT

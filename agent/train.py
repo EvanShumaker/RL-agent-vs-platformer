@@ -11,6 +11,9 @@ from env.gym_wrapper import PlatformerEnv
 from agent.dqn import DQNAgent
 from agent.replay_buffer import ReplayBuffer
 
+# another test print
+# print("MODULE LOADED", flush=True)
+
 # training hyperparameters
 NUM_EPISODES = 1200
 BATCH_SIZE = 64
@@ -94,5 +97,5 @@ def train():
         print(f"Training complete. Final checkpoint saved: {final_path}")
 
 
-    if __name__ == "__main__":
-        train()
+if __name__ == "__main__":
+    train()
