@@ -9,8 +9,20 @@ import matplotlib.pyplot as plt
 LOG_PATH = "logs/training_log.csv"
 
 
-def load_log():
+def load_log(path):
     """ load info from csvs into variables """
+    episodes, rewards, steps, epsilons, losses = [], [], [], [], []
+
+    with open(path, "r") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            episodes.append(int(row["episode"]))
+            rewards.append(float(row["total_reward"]))
+            steps.append(int(row["steps"]))
+            epsilons.append(float(row["epsilon"]))
+            losses.append(float(row["avg_loss"]))
+
+    return episodes, rewards, steps, epsilons, losses
 
 
 def moving_average():
