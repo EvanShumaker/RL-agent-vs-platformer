@@ -24,8 +24,12 @@ CHECKPOINT_DIR = "checkpoints"
 
 
 def train():
+    # these 3 print statements are for testing
+    print("Starting train()...")
     env = PlatformerEnv()
+    print("Environment created.")
     agent = DQNAgent()
+    print("Agent created.")
     replay_buffer = ReplayBuffer(capacity=REPLAY_BUFFER_CAPACITY)
 
     # prog is ran multiple times, so obv the file is going to exist after the first run, and thats fine
