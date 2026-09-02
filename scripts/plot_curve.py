@@ -25,8 +25,15 @@ def load_log(path):
     return episodes, rewards, steps, epsilons, losses
 
 
-def moving_average():
+def moving_average(values, window=20):
     """Smooth data so it looks cleaner visually/clearer to see trends? idk if ill need"""
+    if len(values) < window:
+        return values
+    smoothed = []
+    for i in range(len(values)):
+        start = max(0, i - window + 1)
+        smoothed.append(sum(values[start:i + 1]) / (i - start + 1))
+    return smoothed
 
 
 def plot():
