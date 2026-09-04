@@ -69,6 +69,7 @@ def plot(episodes, rewards, steps, epsilons, losses):
     axes[1, 1].set_ylabel("Loss")
     axes[1, 1].legend()
 
+    # helps keep them spread out
     plt.tight_layout()
     plt.show()
 
