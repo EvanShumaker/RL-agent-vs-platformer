@@ -52,4 +52,4 @@ REWARD_STEP = -0.01             # i wanna encourage efficiency
 REWARD_GOAL = 100.0
 REWARD_DEATH = -50.0
 #.09 or 1?
-REWARD_PROGRESS_SCALE = 0.09     # multiplier for reward based on x progress towards goal
+REWARD_PROGRESS_SCALE = 0.095     # multiplier for reward based on x progress towards goal
