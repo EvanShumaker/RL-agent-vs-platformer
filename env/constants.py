@@ -51,5 +51,6 @@ MAX_EPISODE_STEPS = 500
 REWARD_STEP = -0.01             # i wanna encourage efficiency
 REWARD_GOAL = 100.0
 # REWARD_DEATH = -50.0
+REWARD_DEATH = -45.0
 #.09 or 1?
 REWARD_PROGRESS_SCALE = 0.099     # multiplier for reward based on x progress towards goal
