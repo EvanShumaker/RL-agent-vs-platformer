@@ -16,7 +16,7 @@ from agent.replay_buffer import ReplayBuffer
 
 # training hyperparameters
 # NUM_EPISODES = 1200
-NUM_EPISODES = 900
+NUM_EPISODES = 950
 BATCH_SIZE = 64
 REPLAY_BUFFER_CAPACITY = 50_000
 TARGET_UPDATE_FREQUENCY = 10  # episodes between target network syncs
