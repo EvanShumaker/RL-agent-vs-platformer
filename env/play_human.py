@@ -43,7 +43,7 @@ def draw(screen, game):
     for (x,y,w,h) in state["platforms"]:
         pygame.draw.rect(screen, (100,100,110), (x,y,w,h))
 
-    # this is the goal.
+    # this is the goal
     pygame.draw.rect(screen, (240,200,60), state["goal"])
 
     # Draw pit (visual of this helps with testing)
