@@ -34,7 +34,7 @@ def draw(screen, game):
     """
     used by pygame to draw the actual level
     """
-    screen.fill((30,30,40)) # dark background
+    screen.fill((30,30,40)) # dark background.
 
     state = game.get_state()
 
