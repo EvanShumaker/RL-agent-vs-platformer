@@ -81,19 +81,18 @@ class DQNAgent:
         return self.epsilon_start + fraction * (self.epsilon_end - self.epsilon_start)
 
 
-    def select_action(self, observation, training=True):
-        """
-        This is epsilon greedy: With probability epsilon, pick random action (observation)
-        Otherwise, pick action with highest predicted Q val (exploitation)
-        """
+    def select_action(self, observation, training=True, epsilon_override=None):
         if training:
-            epsilon = self.get_epsilon()
-            self.steps_done += 1
-            if (random.random() < epsilon):
+            if epsilon_override is not None:
+                epsilon = epsilon_override
+            else:
+                epsilon = self.get_epsilon()
+                self.steps_done += 1
+            if random.random() < epsilon:
                 return random.randrange(self.num_actions)
 
         with torch.no_grad():
-            obs_tensor = torch.from_numpy(observation).unsqueeze(0) #to add batch dimension
+            obs_tensor = torch.from_numpy(observation).unsqueeze(0)
             q_values = self.q_network(obs_tensor)
             return q_values.argmax(dim=1).item()
 
