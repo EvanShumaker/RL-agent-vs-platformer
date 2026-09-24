@@ -37,7 +37,7 @@ def train():
     replay_buffer = ReplayBuffer(capacity=REPLAY_BUFFER_CAPACITY)
 
     # prog is ran multiple times, so obv the file is going to exist after the first run, and thats fine
-    # .dirname gets just logs/ from the whole logpath
+    # .dirname gets just logs/ from the whole logpath.
     os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
 
