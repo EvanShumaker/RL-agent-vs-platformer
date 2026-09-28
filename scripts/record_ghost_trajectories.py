@@ -15,7 +15,7 @@ from agent.dqn import DQNAgent
 CHECKPOINT_DIR = "checkpoints"
 OUTPUT_PATH = "logs/ghost_trajectories.json"
 EPISODES_PER_CHECKPOINT = 8
-EXPLORATION_EPSILON = 0.15  # small randomness so repeated runs on the same checkpoint vary
+EXPLORATION_EPSILON = 0.15  # small randomness so repeated runs on the same checkpoint vary.
 
 
 
