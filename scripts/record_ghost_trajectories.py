@@ -20,8 +20,14 @@ EXPLORATION_EPSILON = 0.15  # small randomness so repeated runs on the same chec
 
 
 def get_checkpoint_files():
-    """Find checkpoint files based on name and then sort them bu number"""
+    """Find checkpoint files named like checkpoint_ep100.pt, sorted by episode number."""
     files = []
+    for name in os.listdir(CHECKPOINT_DIR):
+        match = re.match(r"checkpoint_ep(\d+)\.pt", name)
+        if match:
+            episode_num = int(match.group(1))
+            files.append((episode_num, os.path.join(CHECKPOINT_DIR, name)))
+    files.sort(key=lambda pair: pair[0])
     return files
 
 def record_episode(env, agent):
