@@ -31,10 +31,21 @@ def get_checkpoint_files():
     return files
 
 def record_episode(env, agent):
-    """Run a single episode, recording the x,y at every step"""
-    trajectory = 0
+    """Run one episode, recording (x, y) at every step."""
+    observation = env.reset()
     state = env.game.get_state()
-    return trajectory, [], state["x"]
+    trajectory = [(state["player_x"], state["player_y"])]
+    total_reward = 0.0
+    done = False
+
+    while not done:
+        action = agent.select_action(observation, training=True, epsilon_override=EXPLORATION_EPSILON)
+        observation, reward, done, info = env.step(action)
+        total_reward += reward
+        state = env.game.get_state()
+        trajectory.append((state["player_x"], state["player_y"]))
+
+    return trajectory, total_reward, state["goal_reached"]
 
 
 def main():
