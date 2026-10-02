@@ -35,7 +35,7 @@ def draw_static_level(screen):
     """self explanatory, recreating the level based on what was used in training"""
     for (x, y, w, h) in C.PLATFORMS:
         pygame.draw.rect(screen, (100, 100, 110), (x, y, w, h))
-        
+
     gx, gy, gw, gh = C.GOAL
     pygame.draw.rect(screen, (240, 200, 60), (gx, gy, gw, gh))
     pit_x_min, pit_x_max = C.PIT_X_RANGE
@@ -45,6 +45,37 @@ def draw_static_level(screen):
 def main():
     """Big func: get all the runs as json, sort by reward, init pygame, then
      add all the run records with loop. """
+    
+    runs = load_runs()
+    if not runs:
+        print("No recorded runs found — run scripts/record_ghost_trajectories.py first.")
+        return
+
+    episodes = [r["checkpoint_episode"] for r in runs]
+    min_ep, max_ep = min(episodes), max(episodes)
+
+    sorted_indices = sorted(range(len(runs)), key=lambda i: runs[i]["total_reward"], reverse=True)
+    top_indices = set(sorted_indices[:TOP_N_HIGHLIGHT])
+
+    max_length = max(len(r["trajectory"]) for r in runs)
+
+    pygame.init()
+    screen = pygame.display.set_mode((C.SCREEN_WIDTH, C.SCREEN_HEIGHT))
+    pygame.display.set_caption("Ghost Replay — All Training Stages")
+    clock = pygame.time.Clock()
+
+    ghost_surface = pygame.Surface((C.SCREEN_WIDTH, C.SCREEN_HEIGHT), pygame.SRCALPHA)
+
+    frame = 0
+    running = True
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
+        # do the important stuff here. 2 for loops, one for most runs, the other for top runs
+
+    pygame.quit()
 
 if __name__ == "__main__":
     main()
