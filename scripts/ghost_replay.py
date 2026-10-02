@@ -33,6 +33,13 @@ def get_color_for_checkpoint(checkpoint_episode, min_ep, max_ep):
 
 def draw_static_level(screen):
     """self explanatory, recreating the level based on what was used in training"""
+    for (x, y, w, h) in C.PLATFORMS:
+        pygame.draw.rect(screen, (100, 100, 110), (x, y, w, h))
+        
+    gx, gy, gw, gh = C.GOAL
+    pygame.draw.rect(screen, (240, 200, 60), (gx, gy, gw, gh))
+    pit_x_min, pit_x_max = C.PIT_X_RANGE
+    pygame.draw.rect(screen, (60, 20, 20), (pit_x_min, C.SCREEN_HEIGHT - 10, pit_x_max - pit_x_min, 10))
 
 
 def main():
