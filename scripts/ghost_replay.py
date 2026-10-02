@@ -22,7 +22,14 @@ def get_color_for_checkpoint(checkpoint_episode, min_ep, max_ep):
     """Based on how high the reward was, the color will be closer to
     blue than red. This will probably get called for every run in main()"""
 
-    # min and max ep used to base the colors off of.
+    # min and max ep used to base the colors off of. Fraction math to get what the gradient should be
+    if max_ep == min_ep:
+            fraction = 1.0
+    else:
+        fraction = (checkpoint_episode - min_ep) / (max_ep - min_ep)
+    r = int(255 * fraction)
+    b = int(255 * (1 - fraction))
+    return (r, 80, b)
 
 def draw_static_level(screen):
     """self explanatory, recreating the level based on what was used in training"""
