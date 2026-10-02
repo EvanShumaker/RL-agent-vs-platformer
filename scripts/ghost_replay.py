@@ -74,6 +74,35 @@ def main():
                 running = False
 
         # do the important stuff here. 2 for loops, one for most runs, the other for top runs
+        screen.fill((30, 30, 40))
+        draw_static_level(screen)
+        ghost_surface.fill((0, 0, 0, 0))  # clear to fully transparent
+
+        # Pass 1: faint ghosts onto the transparent surface
+        for i, run in enumerate(runs):
+            if i in top_indices or frame >= len(run["trajectory"]):
+                continue
+            x, y = run["trajectory"][frame]
+            color = get_color_for_checkpoint(run["checkpoint_episode"], min_ep, max_ep)
+            center = (int(x + C.PLAYER_WIDTH / 2), int(y + C.PLAYER_HEIGHT / 2))
+            pygame.draw.circle(ghost_surface, (*color, 60), center, 5)
+
+        screen.blit(ghost_surface, (0, 0))
+
+        # Pass 2: solid top-N runs drawn on top, so they stay crisp
+        for i in top_indices:
+            run = runs[i]
+            if frame >= len(run["trajectory"]):
+                continue
+            x, y = run["trajectory"][frame]
+            color = get_color_for_checkpoint(run["checkpoint_episode"], min_ep, max_ep)
+            center = (int(x + C.PLAYER_WIDTH / 2), int(y + C.PLAYER_HEIGHT / 2))
+            pygame.draw.circle(screen, color, center, 6)
+
+        pygame.display.flip()
+
+        frame = (frame + 1) % max_length  # loop back once everyone's finished
+        clock.tick(FPS)
 
     pygame.quit()
 
