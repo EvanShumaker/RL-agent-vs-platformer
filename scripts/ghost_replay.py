@@ -108,3 +108,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+"""
+Replay note: It seems some bright reds still make it to the end, and some blues dont...
+will investigate
+"""
