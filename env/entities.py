@@ -108,10 +108,13 @@ class Player:
         else:
             in_pit_x = False
         
-        if(self.y > C.SCREEN_HEIGHT):
+        """if(self.y > C.SCREEN_HEIGHT):
             fell_below_screen = True
             if (in_pit_x and fell_below_screen):
-                        self.alive = False
+                        self.alive = False"""
+        # simplifying it for now, its possible my old logic wasnt working
+        if self.y > C.SCREEN_HEIGHT:
+            self.alive = False
         
 
     def check_goal_reached(self, goal):
