@@ -32,7 +32,16 @@ class PlatformerEnv:
     def step(self, action):
         reward, done = self.game.step(action)
         observation = self._build_observation()
-        info = {} # might need later to pass extra info
+
+        state = self.game.get_state()
+        # An episode that ends while the player is still alive and hasn't
+        #reached the goal ended because of the step limit, not a real outcome
+        truncated = done and state["alive"] and not state["goal_reached"]
+
+        info = {
+            "truncated": truncated,
+            "goal_reached": state["goal_reached"],
+        }
 
         return observation, reward, done, info
 
