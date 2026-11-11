@@ -59,7 +59,11 @@ def train():
                 action = agent.select_action(observation, training=True)
                 next_observation, reward, done, info = env.step(action)
 
-                replay_buffer.push(observation, action, reward, next_observation, done)
+                # replay_buffer.push(observation, action, reward, next_observation, done)
+                # only real endings (death or goal) count as terminal for the Bellman update
+                # a timeout ends the episode, but isn't a true "no future" state
+                terminal = done and not info["truncated"]
+                replay_buffer.push(observation, action, reward, next_observation, terminal)
 
                 observation = next_observation
                 total_reward += reward
