@@ -51,7 +51,8 @@ class DQNAgent:
             gamma=0.99,
             epsilon_start=1.0,
             epsilon_end=0.05,
-            epsilon_decay_steps=50_000,
+            #epsilon_decay_steps=50_000,
+            epsilon_decay_steps=300_000, # agent was crashing too early with only 50k
     ):
         """Setup target network here."""
         self.num_actions = num_actions
