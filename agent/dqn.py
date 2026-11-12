@@ -47,7 +47,7 @@ class DQNAgent:
             self,
             obs_size=PlatformerEnv.OBS_SIZE,
             num_actions=C.NUM_ACTIONS,
-            lr=1e-3,
+            lr=1e-4,
             gamma=0.99,
             epsilon_start=1.0,
             epsilon_end=0.05,

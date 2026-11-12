@@ -45,7 +45,7 @@ def train():
     #an exception thrown somewhere and .close() isnt ran, the file stays open
     with open(LOG_PATH, "w", newline="") as log_file:
         log_writer = csv.writer(log_file)
-        log_writer.writerow(["episode","total_reward","steps","epsilon","avg_loss"])
+        log_writer.writerow(["episode", "total_reward", "steps", "epsilon", "avg_loss", "reached_goal"])
 
         # cant do 0, NUM_EPS
         for episode in range(1, NUM_EPISODES+1):
@@ -73,6 +73,8 @@ def train():
                     loss = agent.train_step(replay_buffer, BATCH_SIZE)
                     if loss is not None:
                         losses.append(loss)
+                        
+            reached_goal = int(env.game.get_state()["goal_reached"])
 
             if episode % TARGET_UPDATE_FREQUENCY == 0:
                 agent.update_target_network()
@@ -80,7 +82,7 @@ def train():
             avg_loss = np.mean(losses) if losses else 0.0
             current_epsilon = agent.get_epsilon()
 
-            log_writer.writerow([episode, total_reward, steps, current_epsilon, avg_loss])
+            log_writer.writerow([episode, total_reward, steps, current_epsilon, avg_loss, reached_goal])
             log_file.flush()  # write to disk immediately. logs are readable mid training
 
             print(
