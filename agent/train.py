@@ -69,62 +69,70 @@ def evaluate(agent, eval_env):
     return wins / EVAL_EPISODES, greedy_won # return win% and whether greedy won
 
 def train():
-    # these 3 print statements are for testing
-    print("Starting train()...")
     env = PlatformerEnv()
-    print("Environment created.")
+
+    # separate env (only for the periodic evaluations) so evaluation never disturbs training
+    eval_env = PlatformerEnv()   
+
     agent = DQNAgent()
-    print("Agent created.")
     replay_buffer = ReplayBuffer(capacity=REPLAY_BUFFER_CAPACITY)
 
-    # prog is ran multiple times, so obv the file is going to exist after the first run, and thats fine
-    # .dirname gets just logs/ from the whole logpath.
     os.makedirs(os.path.dirname(LOG_PATH), exist_ok=True)
     os.makedirs(CHECKPOINT_DIR, exist_ok=True)
 
-    # I could do log_file = open(...), but id have to do .close() later. And if theres
-    #an exception thrown somewhere and .close() isnt ran, the file stays open
+    total_steps = 0 #counts every environment step across all episodes
+    # score to beat, starts -1 so any real score can beat it
+    best_score = (-1.0, False)   
+    # NOTE: Python compares tuples left to right, so the true/false is a tiebreaker
+
     with open(LOG_PATH, "w", newline="") as log_file:
         log_writer = csv.writer(log_file)
-        log_writer.writerow(["episode", "total_reward", "steps", "epsilon", "avg_loss", "reached_goal"])
+        log_writer.writerow(
+            ["episode", "total_reward", "steps", "epsilon", "avg_loss", "reached_goal"]
+        )
 
-        # cant do 0, NUM_EPS
-        for episode in range(1, NUM_EPISODES+1):
+        # each of these lps is one attempt at the level
+        for episode in range(1, NUM_EPISODES + 1):
             observation = env.reset()
             total_reward = 0.0
             steps = 0
             losses = []
             done = False
 
-            while not done:
+            while not done: #each pass here is one step
                 action = agent.select_action(observation, training=True)
                 next_observation, reward, done, info = env.step(action)
+                # 'done' means they died, won, or timed out.
 
-                # replay_buffer.push(observation, action, reward, next_observation, done)
-                # only real endings (death or goal) count as terminal for the Bellman update
-                # a timeout ends the episode, but isn't a true "no future" state
+                # Timeouts aren't real endings (truncated implies timeout), so true terminal = real ending
                 terminal = done and not info["truncated"]
                 replay_buffer.push(observation, action, reward, next_observation, terminal)
 
                 observation = next_observation
                 total_reward += reward
                 steps += 1
+                total_steps += 1
 
+                # a buffer has 1000 experiences, every env step also triggers a training step
+                #w/ a random batch of 64 old experiences
                 if len(replay_buffer) >= MIN_BUFFER_SIZE_TO_TRAIN:
                     loss = agent.train_step(replay_buffer, BATCH_SIZE)
                     if loss is not None:
                         losses.append(loss)
 
+                # every 2k steps overall, copy the main networks weights into the target network
+                if total_steps % TARGET_UPDATE_STEPS == 0:
+                    agent.update_target_network()
+
+            # checks if episode ended in a win or loss (1 or 0)
             reached_goal = int(env.game.get_state()["goal_reached"])
-
-            if episode % TARGET_UPDATE_FREQUENCY == 0:
-                agent.update_target_network()
-
             avg_loss = np.mean(losses) if losses else 0.0
             current_epsilon = agent.get_epsilon()
 
-            log_writer.writerow([episode, total_reward, steps, current_epsilon, avg_loss, reached_goal])
-            log_file.flush()  # write to disk immediately. logs are readable mid training
+            log_writer.writerow(
+                [episode, total_reward, steps, current_epsilon, avg_loss, reached_goal]
+            )
+            log_file.flush()
 
             print(
                 f"Episode {episode}/{NUM_EPISODES} | "
@@ -134,15 +142,31 @@ def train():
                 f"Avg Loss: {avg_loss:.4f}"
             )
 
+            # saving the weights every 100eps in a checkpoint
             if episode % CHECKPOINT_FREQUENCY == 0:
-                checkpoint_path = os.path.join(CHECKPOINT_DIR, f"checkpoint_ep{episode}.pt")
-                agent.save(checkpoint_path)
-                print(f"  Saved checkpoint: {checkpoint_path}")
+                path = os.path.join(CHECKPOINT_DIR, f"checkpoint_ep{episode}.pt")
+                agent.save(path)
+                print(f"  Saved checkpoint: {path}")
 
-        # always save a final checkpoint at the end, regardless of frequency alignment.
-        final_path = os.path.join(CHECKPOINT_DIR, "checkpoint_final.pt")
-        agent.save(final_path)
-        print(f"Training complete. Final checkpoint saved: {final_path}")
+            # evaluate every 50 episodes
+            if episode % EVAL_FREQUENCY == 0:
+                win_rate, greedy_won = evaluate(agent, eval_env)
+                score = (win_rate, greedy_won)
+                print(
+                    f"  EVAL ep{episode}: win rate {win_rate:.2f}, "
+                    f"greedy {'WIN' if greedy_won else 'lose'}"
+                )
+                # if the eval is the best so far, overwrite the best checkpoint we have
+                if score > best_score:
+                    best_score = score
+                    best_path = os.path.join(CHECKPOINT_DIR, "checkpoint_best.pt")
+                    agent.save(best_path)
+                    print(f"  New best! Saved {best_path}")
+
+    final_path = os.path.join(CHECKPOINT_DIR, "checkpoint_final.pt")
+    agent.save(final_path)
+    print(f"Training complete. Final checkpoint saved: {final_path}")
+    print(f"Best evaluation: win rate {best_score[0]:.2f}, greedy {'WIN' if best_score[1] else 'lose'}")
 
 
 if __name__ == "__main__":
