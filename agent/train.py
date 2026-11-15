@@ -2,6 +2,7 @@
 Training loop for the DQN agent. Runs episodes against PlatformerEnv,
 stores experience in the replay buffer, periodically trains the network
 and updates the target network, logs progress to CSV, and saves checkpoints.
+Evaluates so best checkpoint is always saved.
 """
 
 import csv
@@ -19,13 +20,53 @@ from agent.replay_buffer import ReplayBuffer
 NUM_EPISODES = 1200
 BATCH_SIZE = 64
 REPLAY_BUFFER_CAPACITY = 200_000 #50_000
-TARGET_UPDATE_FREQUENCY = 10  # episodes between target network syncs
+#TARGET_UPDATE_FREQUENCY = 10  # episodes between target network syncs
+TARGET_UPDATE_STEPS = 2000         # env steps between target network syncs
 MIN_BUFFER_SIZE_TO_TRAIN = 1000 # don't start training until buffer has this many experiences
 CHECKPOINT_FREQUENCY = 100  # episodes between saving model checkpoints
+
+# Periodic evaluation (decides when to save checkpoint_best.pt) 
+EVAL_FREQUENCY = 50  # episodes between evaluations
+EVAL_EPISODES = 20
+EVAL_EPSILON = 0.05
 
 LOG_PATH = "logs/training_log.csv"
 CHECKPOINT_DIR = "checkpoints"
 
+def evaluate(agent, eval_env):
+    """
+    Returns (noisy_win_rate, greedy_won).
+    This function measures how good the agent currently is, so we know when to save
+    a chackpoint, 
+    The game is deterministic, so a fully greedy run is identical every time;
+    the noisy runs (small epsilon) measure how robust the policy is.
+    eval_env is our test env, we want separate so it doesnt share state with a
+    training env.
+    """
+    def run_episode(epsilon):
+        """
+        epsilon is how much randomness to allow. 'None' is no randomness
+        """
+        # fresh episode
+        observation = eval_env.reset()
+        done = False
+        while not done: #keep going till episode ends or hits 500 step limit
+            if epsilon is None: #greedy mode: always pick highest q val option
+                action = agent.select_action(observation, training=False)
+            else: #noisy mode with randomness
+                action = agent.select_action(
+                    observation, training=True, epsilon_override=epsilon
+                )
+            #step() returns obervation, reward, done, info. Use _ for the stuff i dont need
+            observation, _, done, _ = eval_env.step(action)
+
+        #returns true if episode reached the goal, false otherwise
+        return eval_env.game.get_state()["goal_reached"]
+
+    greedy_won = run_episode(None)
+    # run 20 noisy eps and count the wins
+    wins = sum(run_episode(EVAL_EPSILON) for _ in range(EVAL_EPISODES))
+    return wins / EVAL_EPISODES, greedy_won # return win% and whether greedy won
 
 def train():
     # these 3 print statements are for testing
@@ -73,7 +114,7 @@ def train():
                     loss = agent.train_step(replay_buffer, BATCH_SIZE)
                     if loss is not None:
                         losses.append(loss)
-                        
+
             reached_goal = int(env.game.get_state()["goal_reached"])
 
             if episode % TARGET_UPDATE_FREQUENCY == 0:
