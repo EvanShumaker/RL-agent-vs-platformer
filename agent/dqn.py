@@ -121,8 +121,10 @@ class DQNAgent:
 
         #target q vals: reward + discounted best future val (based on target network)
         with torch.no_grad():
-            next_q_values = self.target_network(next_states)
-            max_next_q = next_q_values.max(dim=1)[0]
+            # Double DQN: the main network picks the best next action,
+            #the target network scores that action
+            best_next_actions = self.q_network(next_states).argmax(dim=1, keepdim=True)
+            max_next_q = self.target_network(next_states).gather(1, best_next_actions).squeeze(1)
             # If done there is no future. zero out the future term
             targets = rewards + self.gamma * max_next_q * (1 - dones)
 
@@ -130,6 +132,7 @@ class DQNAgent:
 
         self.optimizer.zero_grad()
         loss.backward()
+        torch.nn.utils.clip_grad_norm_(self.q_network.parameters(), 10.0)
         self.optimizer.step()
 
         return loss.item()
