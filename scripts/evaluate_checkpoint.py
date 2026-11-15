@@ -45,6 +45,8 @@ def get_checkpoints():
             found.append((f"ep{match.group(1)}", int(match.group(1)), path))
         elif name == "checkpoint_final.pt":
             found.append(("final", float("inf"), path))
+        elif name == "checkpoint_best.pt":
+            found.append(("best", 1e9, path))
     found.sort(key=lambda item: item[1])
     return found
 
@@ -84,7 +86,7 @@ def main():
         candidate = (win_rate, greedy_won, label)
         if best is None or candidate[:2] > best[:2]:
             best = candidate
-            
+
     if best is None:
         return    
 
