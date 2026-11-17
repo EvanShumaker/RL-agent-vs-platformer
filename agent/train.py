@@ -17,7 +17,7 @@ from agent.replay_buffer import ReplayBuffer
 
 # training hyperparameters
 # NUM_EPISODES = 1200
-NUM_EPISODES = 25 #1200
+NUM_EPISODES = 1200
 BATCH_SIZE = 64
 REPLAY_BUFFER_CAPACITY = 200_000 #50_000
 #TARGET_UPDATE_FREQUENCY = 10  # episodes between target network syncs
@@ -26,8 +26,8 @@ MIN_BUFFER_SIZE_TO_TRAIN = 1000 # don't start training until buffer has this man
 CHECKPOINT_FREQUENCY = 100  # episodes between saving model checkpoints
 
 # Periodic evaluation (decides when to save checkpoint_best.pt) 
-EVAL_FREQUENCY = 10#50  # episodes between evaluations
-EVAL_EPISODES = 3#20
+EVAL_FREQUENCY = 50  # episodes between evaluations
+EVAL_EPISODES = 20
 EVAL_EPSILON = 0.05
 
 LOG_PATH = "logs/training_log.csv"
