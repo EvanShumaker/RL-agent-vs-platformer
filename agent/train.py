@@ -17,7 +17,7 @@ from agent.replay_buffer import ReplayBuffer
 
 # training hyperparameters
 # NUM_EPISODES = 1200
-NUM_EPISODES = 1200
+NUM_EPISODES = 25 #1200
 BATCH_SIZE = 64
 REPLAY_BUFFER_CAPACITY = 200_000 #50_000
 #TARGET_UPDATE_FREQUENCY = 10  # episodes between target network syncs
@@ -26,8 +26,8 @@ MIN_BUFFER_SIZE_TO_TRAIN = 1000 # don't start training until buffer has this man
 CHECKPOINT_FREQUENCY = 100  # episodes between saving model checkpoints
 
 # Periodic evaluation (decides when to save checkpoint_best.pt) 
-EVAL_FREQUENCY = 50  # episodes between evaluations
-EVAL_EPISODES = 20
+EVAL_FREQUENCY = 10#50  # episodes between evaluations
+EVAL_EPISODES = 3#20
 EVAL_EPSILON = 0.05
 
 LOG_PATH = "logs/training_log.csv"
@@ -151,7 +151,7 @@ def train():
             # evaluate every 50 episodes
             if episode % EVAL_FREQUENCY == 0:
                 win_rate, greedy_won = evaluate(agent, eval_env)
-                score = (win_rate, greedy_won)
+                score = (greedy_won, win_rate) #score = (win_rate, greedy_won)
                 print(
                     f"  EVAL ep{episode}: win rate {win_rate:.2f}, "
                     f"greedy {'WIN' if greedy_won else 'lose'}"
@@ -166,7 +166,8 @@ def train():
     final_path = os.path.join(CHECKPOINT_DIR, "checkpoint_final.pt")
     agent.save(final_path)
     print(f"Training complete. Final checkpoint saved: {final_path}")
-    print(f"Best evaluation: win rate {best_score[0]:.2f}, greedy {'WIN' if best_score[1] else 'lose'}")
+    #print(f"Best evaluation: win rate {best_score[0]:.2f}, greedy {'WIN' if best_score[1] else 'lose'}")
+    print(f"Best evaluation: greedy {'WIN' if best_score[0] else 'lose'}, win rate {best_score[1]:.2f}")
 
 
 if __name__ == "__main__":
